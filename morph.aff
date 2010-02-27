@@ -1,0 +1,16 @@
+# example for morphological analysis, stemming and generation
+SFX D Y 4
+SFX D   0 ed [^e] is:past_1
+SFX D   0 d e     is:past_1
+SFX D   0 ed [^e] is:past_2
+SFX D   0 d e     is:past_2
+
+SFX S Y 1
+SFX S   0 s . is:plur
+
+SFX Q Y 1
+SFX Q   0 s . is:sg_3
+
+SFX T Y 2
+SFX T   0 ing [^e] is:pr_part
+SFX T   e ing e    is:pr_part

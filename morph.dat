@@ -1,0 +1,11 @@
+ISO8859-1
+mouse|1
+(n)|rodent
+rodent|1
+(n)|mouse
+eat|1
+(v)|consume|ingest
+consume|1
+(v)|eat|ingest
+ingest|1
+(v)|eat|consume

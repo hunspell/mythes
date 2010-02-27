@@ -1,0 +1,9 @@
+8
+rodent/S        po:n        ts:nom
+mouse	po:n	al:mice ts:nom
+mice	po:n st:mouse        is:plur
+consume/TQD     po:v ts:present
+ingest/TQD      po:v ts:present
+eat/QT	po:v	al:ate	al:eaten	ts:present
+ate	po:v	st:eat	is:past_1
+eaten	po:v	st:eat	is:past_2

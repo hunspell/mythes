@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=@libdir@
+includedir=@includedir@
+
+Name: mythes
+Description: MyThes spellchecking library
+Version: @VERSION@
+Libs: -L${libdir} -lmythes-@MYTHES_VERSION_MAJOR@.@MYTHES_VERSION_MINOR@
+Cflags: -I${includedir}
