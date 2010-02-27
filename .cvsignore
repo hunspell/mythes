@@ -1,0 +1,14 @@
+Makefile
+autom4te.cache
+config.h
+config.log
+config.status
+mythes.pc
+mythes.lo
+libtool
+stamp-h1
+.deps
+.libs
+example
+libmythes-*.la
+mythes-*.tar.gz
