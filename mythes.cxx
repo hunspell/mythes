@@ -343,15 +343,15 @@ char * MyThes::get_th_encoding()
 
 
 // string duplication routine
-char * MyThes::mystrdup(const char * p)
+char * MyThes::mystrdup(const char * s)
 {
-  int sl = strlen(p) + 1;
-  char * d = (char *)malloc(sl);
-  if (d) {
-    memcpy(d,p,sl);
-    return d;
+  char * d = NULL;
+  if (s) {
+    int sl = strlen(s+1);
+    d = (char *) malloc(sl);
+    if (d) memcpy(d,s,sl);
   }
-  return NULL;
+  return d;
 }
 
 // remove cross-platform text line end characters
