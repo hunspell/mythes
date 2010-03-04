@@ -49,13 +49,22 @@ private:
         int thInitialize (const char* indxpath, const char* datpath);
         
         // internal close and cleanup dat and idx files
-        int thCleanup ();
+        void thCleanup ();
 
         // read a text line (\n terminated) stripping off line terminator
         int readLine(FILE * pf, char * buf, int nc);
 
         // binary search on null terminated character strings
         int binsearch(char * wrd, char* list[], int nlst);
+
+        // string duplication routine
+        char * mystrdup(const char * p);
+
+        // remove cross-platform text line end characters
+        void mychomp(char * s);
+
+        // return index of char in string
+        int mystr_indexOfChar(const char * d, int c);
 
 };
 

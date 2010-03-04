@@ -1,6 +1,6 @@
-AC_INIT([mythes],[1.2.0],[nemeth@openoffice.org])
+AC_INIT([mythes],[1.2.1],[nemeth@openoffice.org])
 
-AM_INIT_AUTOMAKE(mythes, 1.2.0)
+AM_INIT_AUTOMAKE(mythes, 1.2.1)
 
 AC_CONFIG_MACRO_DIR([m4])
 

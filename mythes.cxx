@@ -6,40 +6,6 @@
 
 #include "mythes.hxx"
 
-// some basic utility routines
-
-
-// string duplication routine
-char * mythesstrdup(const char * p)
-{
-   
-  int sl = strlen(p) + 1;
-  char * d = (char *)malloc(sl);
-  if (d) {
-    memcpy(d,p,sl);
-    return d;
-  }
-  return NULL;
-}
-
-
-// return index of char in string
-int mystr_indexOfChar(const char * d, int c)
-{
-  const char * p = strchr(d,c);
-  if (p) return (int)(p-d);
-  return -1;
-}
-
-
-// remove cross-platform text line end characters
-void mytheschomp(char * s)
-{
-  int k = strlen(s);
-  if ((k > 0) && ((*(s+k-1)=='\r') || (*(s+k-1)=='\n'))) *(s+k-1) = '\0';
-  if ((k > 1) && (*(s+k-2) == '\r')) *(s+k-2) = '\0';
-}
-
 
 
 MyThes::MyThes(const char* idxpath, const char * datpath)
@@ -52,9 +18,7 @@ MyThes::MyThes(const char* idxpath, const char * datpath)
     if (thInitialize(idxpath, datpath) != 1) {
         fprintf(stderr,"Error - can't open %s or %s\n",idxpath, datpath);
         fflush(stderr);
-        if (encoding) free((void*)encoding);
-        if (list)  free((void*)list);
-        if (offst) free((void*)offst);
+        thCleanup();
         // did not initialize properly - throw exception?
     }
 }
@@ -62,13 +26,7 @@ MyThes::MyThes(const char* idxpath, const char * datpath)
 
 MyThes::~MyThes()
 {
-    if (thCleanup() != 1) {
-        /* did not cleanup properly - throw exception? */
-    }
-    if (encoding) free((void*)encoding);
-    encoding = NULL;
-    list = NULL;
-    offst = NULL;
+    thCleanup();
 }
 
 
@@ -78,15 +36,20 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     // open the index file
     FILE * pifile = fopen(idxpath,"r");
     if (!pifile) {
-        pifile = NULL;
         return 0;
     } 
 
     // parse in encoding and index size */    
     char * wrd;
     wrd = (char *)calloc(1, MAX_WD_LEN);
+    if (!wrd) {
+       fprintf(stderr,"Error - bad memory allocation\n");
+       fflush(stderr);
+       fclose(pifile);
+       return 0;
+    }
     int len = readLine(pifile,wrd,MAX_WD_LEN);
-    encoding = mythesstrdup(wrd);
+    encoding = mystrdup(wrd);
     len = readLine(pifile,wrd,MAX_WD_LEN);
     int idxsz = atoi(wrd); 
     
@@ -98,6 +61,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     if ( (!(list)) || (!(offst)) ) {
        fprintf(stderr,"Error - bad memory allocation\n");
        fflush(stderr);
+       fclose(pifile);
        return 0;
     }
 
@@ -107,25 +71,29 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     { 
         int np = mystr_indexOfChar(wrd,'|');
         if (nw < idxsz) {
-           if (np >= 0) {          
-              *(wrd+np) = '\0';
-              list[nw] = (char *)calloc(1,(np+1));
-              memcpy((list[nw]),wrd,np);
-              offst[nw] = atoi(wrd+np+1);
-              nw++;
-	   }
+            if (np >= 0) {          
+                *(wrd+np) = '\0';
+                list[nw] = (char *)calloc(1,(np+1));
+                if (!list[nw]) {
+                    fprintf(stderr,"Error - bad memory allocation\n");
+                    fflush(stderr);
+                    fclose(pifile);
+                    return 0;
+                }
+                memcpy((list[nw]),wrd,np);
+                offst[nw] = atoi(wrd+np+1);
+                nw++;
+            }
         }
         len = readLine(pifile,wrd,MAX_WD_LEN);
     }
 
     free((void *)wrd);
     fclose(pifile);
-    pifile=NULL;
 
     /* next open the data file */
     pdfile = fopen(datpath,"r");
     if (!pdfile) {
-        pdfile = NULL;
         return 0;
     } 
         
@@ -133,7 +101,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 }
 
 
-int MyThes::thCleanup()
+void MyThes::thCleanup()
 {
     /* first close the data file */
     if (pdfile) {
@@ -141,20 +109,26 @@ int MyThes::thCleanup()
         pdfile=NULL;
     }
 
-    /* now free up all the allocated strings on the list */
-    for (int i=0; i < nw; i++) 
+    if (list)
     {
-        if (list[i]) {
-            free(list[i]);
-            list[i] = 0;
+        /* now free up all the allocated strings on the list */
+        for (int i=0; i < nw; i++) 
+        {
+            if (list[i]) {
+                free(list[i]);
+                list[i] = 0;
+            }
         }
+        free((void*)list);
     }
 
-    if (list)  free((void*)list);
+    if (encoding) free((void*)encoding);
     if (offst) free((void*)offst);
 
+    encoding = NULL;
+    list = NULL;
+    offst = NULL;
     nw = 0;
-    return 1;
 }
 
 
@@ -181,7 +155,7 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
     memcpy(wrd,pText,len);
   
     /* find it in the list */
-    int idx = binsearch(wrd,list,nw);
+    int idx = nw > 0 ? binsearch(wrd,list,nw) : -1;
     free(wrd);  
     if (idx < 0) return 0;
 
@@ -227,10 +201,10 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
         np = mystr_indexOfChar(p,'|');
         if (np >= 0) {
            *(buf+np) = '\0';
-	   pos = mythesstrdup(p);
+	   pos = mystrdup(p);
            p = p + np + 1;
 	} else {
-          pos = mythesstrdup("");
+          pos = mystrdup("");
         }
         
         // count the number of fields in the remaining line
@@ -247,15 +221,19 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
         
         // fill in the synonym list
         d = p;
-        for (int j = 0; j < nf; j++) {
+        for (int jj = 0; jj < nf; jj++) 
+        {
             np = mystr_indexOfChar(d,'|');
-            if (np > 0) {
-	      *(d+np) = '\0';
-              pm->psyns[j] = mythesstrdup(d);
-              d = d + np + 1;
-            } else {
-              pm->psyns[j] = mythesstrdup(d);
-	    }            
+            if (np > 0) 
+            {
+                *(d+np) = '\0';
+                pm->psyns[jj] = mystrdup(d);
+                d = d + np + 1;
+            } 
+            else 
+            {
+              pm->psyns[jj] = mystrdup(d);
+            }            
         }
 
         // add pos to first synonym to create the definition
@@ -265,9 +243,9 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
              strncpy(dfn,pos,k);
              *(dfn+k) = ' ';
              strncpy((dfn+k+1),(pm->psyns[0]),m+1);
-             pm->defn = mythesstrdup(dfn);
+             pm->defn = mystrdup(dfn);
 	} else {
-	     pm->defn = mythesstrdup(pm->psyns[0]);
+	     pm->defn = mystrdup(pm->psyns[0]);
 	}
         free(pos);
         pm++;
@@ -320,7 +298,7 @@ int MyThes::readLine(FILE * pf, char * buf, int nc)
 {
     
   if (fgets(buf,nc,pf)) {
-    mytheschomp(buf);
+    mychomp(buf);
     return strlen(buf);
   }
   return -1;
@@ -334,17 +312,17 @@ int MyThes::readLine(FILE * pf, char * buf, int nc)
 //  returns: -1 on not found
 //           index of wrd in the list[]
 
-int MyThes::binsearch(char * sw, char* list[], int nlst) 
+int MyThes::binsearch(char * sw, char* _list[], int nlst) 
 {
     int lp, up, mp, j, indx;
     lp = 0;
     up = nlst-1;
     indx = -1;
-    if (strcmp(sw,list[lp]) < 0) return -1;
-    if (strcmp(sw,list[up]) > 0) return -1;
+    if (strcmp(sw,_list[lp]) < 0) return -1;
+    if (strcmp(sw,_list[up]) > 0) return -1;
     while (indx < 0 ) {
         mp = (int)((lp+up) >> 1);
-        j = strcmp(sw,list[mp]);
+        j = strcmp(sw,_list[mp]);
         if ( j > 0) {
             lp = mp + 1;
         } else if (j < 0 ) {
@@ -361,5 +339,35 @@ char * MyThes::get_th_encoding()
 {
   if (encoding) return encoding;
   return NULL;
+}
+
+
+// string duplication routine
+char * MyThes::mystrdup(const char * p)
+{
+  int sl = strlen(p) + 1;
+  char * d = (char *)malloc(sl);
+  if (d) {
+    memcpy(d,p,sl);
+    return d;
+  }
+  return NULL;
+}
+
+// remove cross-platform text line end characters
+void MyThes::mychomp(char * s)
+{
+  int k = strlen(s);
+  if ((k > 0) && ((*(s+k-1)=='\r') || (*(s+k-1)=='\n'))) *(s+k-1) = '\0';
+  if ((k > 1) && (*(s+k-2) == '\r')) *(s+k-2) = '\0';
+}
+
+
+// return index of char in string
+int MyThes::mystr_indexOfChar(const char * d, int c)
+{
+  char * p = strchr((char *)d,c);
+  if (p) return (int)(p-d);
+  return -1;
 }
 
