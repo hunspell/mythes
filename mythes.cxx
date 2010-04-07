@@ -347,7 +347,7 @@ char * MyThes::mystrdup(const char * s)
 {
   char * d = NULL;
   if (s) {
-    int sl = strlen(s+1);
+    int sl = strlen(s)+1;
     d = (char *) malloc(sl);
     if (d) memcpy(d,s,sl);
   }
