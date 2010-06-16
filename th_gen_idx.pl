@@ -3,7 +3,7 @@
 # perl program to take a thesaurus structured text data file 
 # and create the proper sorted index file (.idx)
 #
-# typcially invoked as follows:
+# typically invoked as follows:
 # cat th_en_US_new.dat | ./th_gen_idx.pl > th_en_US_new.idx
 #
 
