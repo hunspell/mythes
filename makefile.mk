@@ -1,62 +1,35 @@
-#*************************************************************************
+#************************************************************************
+# Copyright 2003 Kevin B. Hendricks, Stratford, Ontario, Canada
+# And Contributors.  All rights reserved.
 #
-#   $RCSfile$
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
 #
-#   $Revision$
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
 #
-#   last change: $Author$ $Date$
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
 #
-#   The Contents of this file are made available subject to the terms of
-#   either of the following licenses
+# 3. All modifications to the source code must be clearly marked as
+#    such.  Binary redistributions based on modified source code
+#    must be clearly marked as modified versions in the documentation
+#    and/or other materials provided with the distribution.
 #
-#          - GNU Lesser General Public License Version 2.1
-#          - Sun Industry Standards Source License Version 1.1
-#
-#   Sun Microsystems Inc., October, 2000
-#
-#   GNU Lesser General Public License Version 2.1
-#   =============================================
-#   Copyright 2000 by Sun Microsystems, Inc.
-#   901 San Antonio Road, Palo Alto, CA 94303, USA
-#
-#   This library is free software; you can redistribute it and/or
-#   modify it under the terms of the GNU Lesser General Public
-#   License version 2.1, as published by the Free Software Foundation.
-#
-#   This library is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#   Lesser General Public License for more details.
-#
-#   You should have received a copy of the GNU Lesser General Public
-#   License along with this library; if not, write to the Free Software
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-#   MA  02111-1307  USA
-#
-#
-#   Sun Industry Standards Source License Version 1.1
-#   =================================================
-#   The contents of this file are subject to the Sun Industry Standards
-#   Source License Version 1.1 (the "License"); You may not use this file
-#   except in compliance with the License. You may obtain a copy of the
-#   License at http://www.openoffice.org/license.html.
-#
-#   Software provided under this License is provided on an "AS IS" basis,
-#   WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING,
-#   WITHOUT LIMITATION, WARRANTIES THAT THE SOFTWARE IS FREE OF DEFECTS,
-#   MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE, OR NON-INFRINGING.
-#   See the License for the specific provisions governing your rights and
-#   obligations concerning the Software.
-#
-#   The Initial Developer of the Original Code is: Sun Microsystems, Inc.
-#
-#   Copyright: 2000 by Sun Microsystems, Inc.
-#
-#   All Rights Reserved.
-#
-#   Contributor(s): _______________________________________
-#
-#
+# THIS SOFTWARE IS PROVIDED BY KEVIN B. HENDRICKS AND CONTRIBUTORS 
+# ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL 
+# KEVIN B. HENDRICKS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
 #
 #*************************************************************************
 
