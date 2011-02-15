@@ -14,6 +14,7 @@ MyThes::MyThes(const char* idxpath, const char * datpath)
     encoding = NULL;
     list = NULL;
     offst = NULL;
+    pdfile = NULL;
 
     if (thInitialize(idxpath, datpath) != 1) {
         fprintf(stderr,"Error - can't open %s or %s\n",idxpath, datpath);
