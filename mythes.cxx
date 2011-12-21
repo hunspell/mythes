@@ -3,10 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <vector>
 
 #include "mythes.hxx"
-
-
 
 MyThes::MyThes(const char* idxpath, const char * datpath)
 {
@@ -41,14 +40,8 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     } 
 
     // parse in encoding and index size */    
-    char * wrd;
-    wrd = (char *)calloc(1, MAX_WD_LEN);
-    if (!wrd) {
-       fprintf(stderr,"Error - bad memory allocation\n");
-       fflush(stderr);
-       fclose(pifile);
-       return 0;
-    }
+    std::vector<char> buffer(MAX_WD_LEN);
+    char * wrd = &buffer[0];
     int len = readLine(pifile,wrd,MAX_WD_LEN);
     encoding = mystrdup(wrd);
     len = readLine(pifile,wrd,MAX_WD_LEN);
@@ -89,7 +82,6 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
         len = readLine(pifile,wrd,MAX_WD_LEN);
     }
 
-    free((void *)wrd);
     fclose(pifile);
 
     /* next open the data file */
@@ -152,12 +144,12 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
     long offset = 0;
 
     /* copy search word and make sure null terminated */
-    char * wrd = (char *) calloc(1,(len+1));
+    std::vector<char> buffer(len+1);
+    char * wrd = &buffer[0];
     memcpy(wrd,pText,len);
   
     /* find it in the list */
     int idx = nw > 0 ? binsearch(wrd,list,nw) : -1;
-    free(wrd);  
     if (idx < 0) return 0;
 
     // now seek to the offset
@@ -338,8 +330,7 @@ int MyThes::binsearch(char * sw, char* _list[], int nlst)
 
 char * MyThes::get_th_encoding()
 {
-  if (encoding) return encoding;
-  return NULL;
+  return encoding;
 }
 
 
