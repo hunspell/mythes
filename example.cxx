@@ -73,7 +73,8 @@ int main(int argc, char** argv)
         if (stemcount) {
             printf("stem: %s\n", stem[0]);
             strcpy(oldbuf,buf);
-            strcpy(buf, stem[0]);
+            strncpy(buf, stem[0], sizeof(buf)-1);
+            buf[sizeof(buf)-1] = 0;
             len = strlen(buf);
             count = pMT->Lookup(buf, len, &pmean);
             myfreelist(&stem, stemcount);
