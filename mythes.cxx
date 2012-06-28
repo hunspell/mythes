@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <limits>
 #include <vector>
 
 #include "mythes.hxx"
@@ -171,7 +172,9 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
          return 0;
     }          
     int nmeanings = atoi(buf+np+1);
-    *pme = (mentry*) malloc( nmeanings * sizeof(mentry) );
+    if (nmeanings < 0 || nmeanings > std::numeric_limits<ssize_t>::max() / sizeof(mentry))
+        nmeanings = 0;
+    *pme = (mentry*)(nmeanings ? malloc(nmeanings * sizeof(mentry)) : NULL);
     if (!(*pme)) {
         free(buf);
         return 0;
