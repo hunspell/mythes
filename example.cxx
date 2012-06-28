@@ -72,7 +72,8 @@ int main(int argc, char** argv)
         if (pH) stemcount = pH->stem(&stem, buf); else stemcount = 0;
         if (stemcount) {
             printf("stem: %s\n", stem[0]);
-            strcpy(oldbuf,buf);
+            strncpy(oldbuf,buf, sizeof(oldbuf)-1);
+            oldbuf[sizeof(oldbuf)-1] = 0;
             strncpy(buf, stem[0], sizeof(buf)-1);
             buf[sizeof(buf)-1] = 0;
             len = strlen(buf);

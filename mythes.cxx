@@ -47,7 +47,12 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     encoding = mystrdup(wrd);
     len = readLine(pifile,wrd,MAX_WD_LEN);
     int idxsz = atoi(wrd); 
-    
+   
+    if (idxsz <= 0 || idxsz > std::numeric_limits<ssize_t>::max() / sizeof(sizeof(char*))) {
+       fprintf(stderr,"Error - bad index %d\n", idxsz);
+       fclose(pifile);
+       return 0;
+    }
 
     // now allocate list, offst for the given size
     list = (char**)   calloc(idxsz,sizeof(char*));
@@ -55,7 +60,6 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 
     if ( (!(list)) || (!(offst)) ) {
        fprintf(stderr,"Error - bad memory allocation\n");
-       fflush(stderr);
        fclose(pifile);
        return 0;
     }
