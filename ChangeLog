@@ -1,3 +1,6 @@
+2012-06-28 Caolán McNamara <cmc at LibO>:
+        * fix some cppcheck warnings
+        * fix some parfait warnings
 2011-12-21 Caolán McNamara <cmc at LibO>:
         * fix some coverity warnings
 2011-02-15 Caolán McNamara <cmc at OOo>:

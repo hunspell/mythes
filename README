@@ -3,13 +3,13 @@ text data file and an index file with binary search
 to lookup words and phrases and return information
 on part of speech, meanings, and synonyms
 
-MyThes was written to provide a thesaurus for the 
-OpenOffice.org project 
+MyThes was originall written to provide a thesaurus
+for the OpenOffice.org project 
 
 The Main features of MyThes are:
 
 1. written in C++ to make it easier to interface with 
-   Pspell, OpenOffice, AbiWord, etc
+   LibreOffice, OpenOffice, AbiWord, Pspell, etc
 
 2. it is stateless, uses no static variables and
    should be completely reentrant with no ifdefs  
@@ -18,7 +18,7 @@ The Main features of MyThes are:
    with no warnigns so it shouldbe quite portable
 
 4. it uses a simple perl program to read the structured
-   text file and create the index needed for bianry
+   text file and create the index needed for binary
    searching
 
 5. it is very simple with *lots* of comments.
@@ -35,7 +35,7 @@ The Main features of MyThes are:
    regenerate an up to date English thesaurus from the most
    recent WordNet data.
    
-7. The source code has a BSD license (and  no advertising clause)
+7. The source code has a BSD license (and no advertising clause)
 
 
 MyThes comes with a simple example program that looks up some words and returns

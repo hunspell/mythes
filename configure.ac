@@ -4,12 +4,12 @@
 m4_pattern_allow
 
 AC_PREREQ(2.59)
-AC_INIT([mythes],[1.2.2],[nemeth@openoffice.org])
+AC_INIT([mythes],[1.2.3],[nemeth@openoffice.org])
 
 AC_CANONICAL_SYSTEM
 AC_SUBST(XFAILED)
 
-AM_INIT_AUTOMAKE(mythes, 1.2.2)
+AM_INIT_AUTOMAKE(mythes, 1.2.3)
 MYTHES_VERSION_MAJOR=`echo $VERSION | cut -d"." -f1`
 MYTHES_VERSION_MINOR=`echo $VERSION | cut -d"." -f2`
 AC_SUBST(MYTHES_VERSION_MAJOR)
