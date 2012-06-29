@@ -33,11 +33,12 @@
 #
 #*************************************************************************
 
-PRJ = ..$/..$/..
+PRJ = ../../../..
 
-PRJNAME	= lingucomponent
-TARGET	= mythes
-LIBTARGET=NO
+PRJNAME=mythes
+TARGET=mythes
+LIBTARGET=YES
+EXTERNAL_WARNINGS_NOT_ERRORS := TRUE
 
 #----- Settings ---------------------------------------------------------
 
@@ -47,10 +48,8 @@ LIBTARGET=NO
 
 all_target: ALLTAR
 
-
-
-SLOFILES=	\
-		$(SLO)$/mythes.obj
+SLOFILES=\
+	$(SLO)$/mythes.obj
 
 LIB1TARGET= $(SLB)$/lib$(TARGET).lib
 LIB1ARCHIV= $(LB)/lib$(TARGET).a
@@ -59,4 +58,3 @@ LIB1OBJFILES= $(SLOFILES)
 # --- Targets ------------------------------------------------------
 
 .INCLUDE : target.mk
-
