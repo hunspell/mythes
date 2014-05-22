@@ -8,6 +8,11 @@
 
 #include "mythes.hxx"
 
+#ifdef _WIN32
+#include <windows.h>
+#include <wchar.h>
+#endif
+
 MyThes::MyThes(const char* idxpath, const char * datpath)
 {
     nw = 0;
@@ -35,7 +40,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 {
 
     // open the index file
-    FILE * pifile = fopen(idxpath,"r");
+    FILE * pifile = myfopen(idxpath,"r");
     if (!pifile) {
         return 0;
     } 
@@ -90,7 +95,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     fclose(pifile);
 
     /* next open the data file */
-    pdfile = fopen(datpath,"r");
+    pdfile = myfopen(datpath,"r");
     if (!pdfile) {
         return 0;
     } 
@@ -377,3 +382,22 @@ int MyThes::mystr_indexOfChar(const char * d, int c)
   return -1;
 }
 
+FILE * MyThes::myfopen(const char * path, const char * mode) {
+#ifdef _WIN32
+#define WIN32_LONG_PATH_PREFIX "\\\\?\\"
+    if (strncmp(path, WIN32_LONG_PATH_PREFIX, 4) == 0) {
+        int len = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
+        wchar_t *buff = (wchar_t *) malloc(len * sizeof(wchar_t));
+        wchar_t *buff2 = (wchar_t *) malloc(len * sizeof(wchar_t));
+        FILE * f = NULL;
+        MultiByteToWideChar(CP_UTF8, 0, path, -1, buff, len);
+        if (_wfullpath( buff2, buff, len ) != NULL) {
+          f = _wfopen(buff2, (strcmp(mode, "r") == 0) ? L"r" : L"rb");
+        }
+        free(buff);
+        free(buff2);
+        return f;
+    }
+#endif
+    return fopen(path, mode);
+}

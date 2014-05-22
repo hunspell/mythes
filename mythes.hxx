@@ -30,6 +30,7 @@ class MyThes
 	MyThes & operator = (const MyThes &);
 
 public:
+        // use UTF-8 encoded paths in WIN32 environment
 	MyThes(const char* idxpath, const char* datpath);
 	~MyThes();
 
@@ -65,6 +66,9 @@ private:
 
         // return index of char in string
         int mystr_indexOfChar(const char * d, int c);
+
+        // fopen or _wfopen
+        FILE * myfopen(const char * path, const char * mode);
 
 };
 
