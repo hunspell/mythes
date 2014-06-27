@@ -8,8 +8,6 @@
 
 extern char * mystrdup(const char * s);
 
-using namespace std;
-
 void myfreelist(char *** list, int n)
 {
    if (list && (n > 0)) {

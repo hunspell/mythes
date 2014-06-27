@@ -43,9 +43,9 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     // parse in encoding and index size */    
     std::vector<char> buffer(MAX_WD_LEN);
     char * wrd = &buffer[0];
-    int len = readLine(pifile,wrd,MAX_WD_LEN);
+    readLine(pifile,wrd,MAX_WD_LEN);
     encoding = mystrdup(wrd);
-    len = readLine(pifile,wrd,MAX_WD_LEN);
+    readLine(pifile,wrd,MAX_WD_LEN);
     int idxsz = atoi(wrd); 
    
     if (idxsz <= 0 || idxsz > std::numeric_limits<int>::max() / sizeof(sizeof(char*))) {
@@ -65,7 +65,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     }
 
     // now parse the remaining lines of the index
-    len = readLine(pifile,wrd,MAX_WD_LEN);
+    int len = readLine(pifile,wrd,MAX_WD_LEN);
     while (len > 0)
     { 
         int np = mystr_indexOfChar(wrd,'|');
@@ -237,16 +237,19 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
         }
 
         // add pos to first synonym to create the definition
-        int k = strlen(pos);
-        int m = strlen(pm->psyns[0]);
-        if ((k+m) < (MAX_WD_LEN - 1)) {
-             strncpy(dfn,pos,k);
-             *(dfn+k) = ' ';
-             strncpy((dfn+k+1),(pm->psyns[0]),m+1);
-             pm->defn = mystrdup(dfn);
-	} else {
-	     pm->defn = mystrdup(pm->psyns[0]);
-	}
+        if (pm->psyns[0])
+	{
+            int k = strlen(pos);
+            int m = strlen(pm->psyns[0]);
+            if ((k+m) < (MAX_WD_LEN - 1)) {
+                 strncpy(dfn,pos,k);
+                 *(dfn+k) = ' ';
+                 strncpy((dfn+k+1),(pm->psyns[0]),m+1);
+                 pm->defn = mystrdup(dfn);
+            } else {
+                pm->defn = mystrdup(pm->psyns[0]);
+            }
+        }
         free(pos);
         pm++;
 

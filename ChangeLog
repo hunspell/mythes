@@ -1,3 +1,5 @@
+2014-06-27 Caolán McNamara <cmc at LibO>:
+        * fix some clang scan-build warnings
 2012-06-28 Caolán McNamara <cmc at LibO>:
         * fix some cppcheck warnings
         * fix some parfait warnings
