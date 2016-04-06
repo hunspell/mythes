@@ -27,3 +27,4 @@ configure
 depcomp
 *.o
 ar-lib
+*.swp
