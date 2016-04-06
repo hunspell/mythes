@@ -6,5 +6,5 @@ includedir=@includedir@
 Name: mythes
 Description: MyThes spellchecking library
 Version: @VERSION@
-Libs: -L${libdir} -lmythes-@MYTHES_VERSION_MAJOR@.@MYTHES_VERSION_MINOR@
+Libs: -L${libdir} -lmythes-@MYTHES_MAJOR_VERSION@.@MYTHES_MINOR_VERSION@
 Cflags: -I${includedir}
