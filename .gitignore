@@ -11,4 +11,4 @@ stamp-h1
 .libs
 example
 libmythes-*.la
-mythes-*.tar.gz
+mythes-*.tar.*
