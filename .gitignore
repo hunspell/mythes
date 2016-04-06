@@ -25,3 +25,4 @@ Makefile.in
 config.h.in
 configure
 depcomp
+*.o
