@@ -33,6 +33,22 @@ AC_PROG_MAKE_SET
 LT_INIT([win32-dll disable-static pic-only])
 AC_CANONICAL_HOST
 
+# =================================
+# Libtool/Version Makefile settings
+# =================================
+AC_SUBST(MYTHES_MAJOR_VERSION, [mythes_version_major])
+AC_SUBST(MYTHES_MINOR_VERSION, [mythes_version_minor])
+AC_SUBST(MYTHES_MICRO_VERSION, [mythes_version_micro])
+AC_SUBST(MYTHES_VERSION, [mythes_version])
+
+# Libtool information
+# Bump current when changing interfaces and null others
+# Bump revision if there was any code change
+# Bump age if interfaces were only added and no other change was done
+AC_SUBST(LT_CURRENT, [0])
+AC_SUBST(LT_REVISION, [0])
+AC_SUBST(LT_AGE, [0])
+
 # ===============
 # Find librevenge
 # ===============
