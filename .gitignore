@@ -12,3 +12,16 @@ stamp-h1
 example
 libmythes-*.la
 mythes-*.tar.*
+*~
+m4/
+aclocal.m4
+compile
+config.guess
+config.sub
+install-sh
+ltmain.sh
+missing
+Makefile.in
+config.h.in
+configure
+depcomp
