@@ -26,3 +26,4 @@ config.h.in
 configure
 depcomp
 *.o
+ar-lib
