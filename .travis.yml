@@ -1,0 +1,25 @@
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+sudo: false
+
+os:
+  - linux
+  - osx
+
+install:
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install hunspell; fi
+
+script:
+  - ./autogen.sh && ./configure --disable-werror && make
+
+addons:
+  apt:
+    packages:
+    - autoconf
+    - automake
+    - libhunspell-dev
