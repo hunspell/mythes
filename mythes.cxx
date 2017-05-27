@@ -48,7 +48,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     readLine(pifile,wrd,MAX_WD_LEN);
     int idxsz = atoi(wrd); 
    
-    if (idxsz <= 0 || idxsz > std::numeric_limits<int>::max() / sizeof(sizeof(char*))) {
+    if (idxsz <= 0 || idxsz > std::numeric_limits<int>::max() / sizeof(char*)) {
        fprintf(stderr,"Error - bad index %d\n", idxsz);
        fclose(pifile);
        return 0;
