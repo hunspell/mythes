@@ -6,7 +6,7 @@ AM_CXXFLAGS = \
 	$(HUNSPELL_CFLAGS) \
 	$(DEBUG_CXXFLAGS)
 
-noinst_PROGRAMS = example
+check_PROGRAMS = example
 example_SOURCES = example.cxx
 example_LDADD = \
 	libmythes-@MYTHES_MAJOR_VERSION@.@MYTHES_MINOR_VERSION@.la \
