@@ -48,7 +48,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     readLine(pifile,wrd,MAX_WD_LEN);
     int idxsz = atoi(wrd); 
    
-    if (idxsz <= 0 || idxsz > std::numeric_limits<int>::max() / sizeof(char*)) {
+    if (idxsz <= 0 || static_cast<unsigned int>(idxsz) > std::numeric_limits<int>::max() / sizeof(char*)) {
        fprintf(stderr,"Error - bad index %d\n", idxsz);
        fclose(pifile);
        return 0;
@@ -176,7 +176,7 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
          return 0;
     }          
     int nmeanings = atoi(buf+np+1);
-    if (nmeanings < 0 || nmeanings > std::numeric_limits<int>::max() / sizeof(mentry))
+    if (nmeanings < 0 || static_cast<unsigned int>(nmeanings) > std::numeric_limits<int>::max() / sizeof(mentry))
         nmeanings = 0;
     *pme = (mentry*)(nmeanings ? malloc(nmeanings * sizeof(mentry)) : NULL);
     if (!(*pme)) {
