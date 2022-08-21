@@ -8,15 +8,6 @@
 
 extern char * mystrdup(const char * s);
 
-void myfreelist(char *** list, int n)
-{
-   if (list && (n > 0)) {
-      for (int i = 0; i < n; i++) if ((*list)[i]) free((*list)[i]);
-      free(*list);
-      *list = NULL;
-   }
-}
-
 int main(int argc, char** argv)
 {
     FILE* wtclst;
@@ -65,18 +56,16 @@ int main(int argc, char** argv)
       // don't change value of pmean
       // or count since needed for CleanUpAfterLookup routine
       if (!count) {
-        int stemcount = 0;
-        char **stem;
-        if (pH) stemcount = pH->stem(&stem, buf); else stemcount = 0;
-        if (stemcount) {
-            printf("stem: %s\n", stem[0]);
+        std::vector<std::string> stem;
+        if (pH) stem = pH->stem(buf);
+        if (!stem.empty()) {
+            printf("stem: %s\n", stem[0].c_str());
             strncpy(oldbuf,buf, sizeof(oldbuf)-1);
             oldbuf[sizeof(oldbuf)-1] = 0;
-            strncpy(buf, stem[0], sizeof(buf)-1);
+            strncpy(buf, stem[0].c_str(), sizeof(buf)-1);
             buf[sizeof(buf)-1] = 0;
             len = strlen(buf);
             count = pMT->Lookup(buf, len, &pmean);
-            myfreelist(&stem, stemcount);
         } else oldbuf[0] = '\0';
       }
 
@@ -86,15 +75,13 @@ int main(int argc, char** argv)
 	for (int  i=0; i < count; i++) {
           printf("   meaning %d: %s\n",i,pm->defn);
           for (int j=0; j < pm->count; j++) {
-            char ** gen;
+            std::vector<std::string> gen;
             int l = 0;
-            if (pH && oldbuf[0]) l = pH->generate(&gen, pm->psyns[j], oldbuf);
-            if (l) {
-                int k;
-                printf("       %s",gen[0]);
-                for (k = 1; k < l; k++) printf(", %s",gen[k]);
+            if (pH && oldbuf[0]) gen = pH->generate(pm->psyns[j], oldbuf);
+            if (!gen.empty()) {
+                printf("       %s",gen[0].c_str());
+                for (size_t k = 1, l = gen.size(); k < l; ++k) printf(", %s",gen[k].c_str());
                 printf("\n");
-                myfreelist(&gen, l);
 	    } else printf("       %s\n",pm->psyns[j]);
 	    
           }
