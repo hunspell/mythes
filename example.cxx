@@ -76,7 +76,6 @@ int main(int argc, char** argv)
           printf("   meaning %d: %s\n",i,pm->defn);
           for (int j=0; j < pm->count; j++) {
             std::vector<std::string> gen;
-            int l = 0;
             if (pH && oldbuf[0]) gen = pH->generate(pm->psyns[j], oldbuf);
             if (!gen.empty()) {
                 printf("       %s",gen[0].c_str());
