@@ -7,7 +7,7 @@ AC_PREREQ([2.65])
 # ====================
 m4_define([mythes_version_major],[1])
 m4_define([mythes_version_minor],[2])
-m4_define([mythes_version_micro],[5])
+m4_define([mythes_version_micro],[6])
 m4_define([mythes_version],[mythes_version_major.mythes_version_minor.mythes_version_micro])
 
 # =============
