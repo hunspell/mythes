@@ -40,7 +40,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
         return 0;
     } 
 
-    // parse in encoding and index size */    
+    // parse in encoding and index size
     std::vector<char> buffer(MAX_WD_LEN);
     char * wrd = &buffer[0];
     readLine(pifile,wrd,MAX_WD_LEN);
