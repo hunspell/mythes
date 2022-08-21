@@ -242,9 +242,9 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
             int k = strlen(pos);
             int m = strlen(pm->psyns[0]);
             if ((k+m) < (MAX_WD_LEN - 1)) {
-                 strncpy(dfn,pos,k);
+                 memcpy(dfn,pos,k);
                  *(dfn+k) = ' ';
-                 strncpy((dfn+k+1),(pm->psyns[0]),m+1);
+                 memcpy((dfn+k+1),(pm->psyns[0]),m+1);
                  pm->defn = mystrdup(dfn);
             } else {
                 pm->defn = mystrdup(pm->psyns[0]);
