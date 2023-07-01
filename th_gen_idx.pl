@@ -5,12 +5,27 @@
 #
 # typically invoked as follows:
 # cat th_en_US_new.dat | ./th_gen_idx.pl > th_en_US_new.idx
+# or
+# ./th_gen_idx.pl -o th_en_US_new.idx < th_en_US_new.dat
 #
 
 sub by_entry {
     my ($aent, $aoff) = split('\|',$a);
     my ($bent, $boff) = split('\|',$b);
     $aent cmp $bent;
+}
+
+sub get_outfile {
+    my $next_is_file = 0;
+    foreach ( @ARGV ) {
+        if ( $next_is_file ) {
+            return $_
+        }
+        if ( $_ eq "-o" ) {
+            $next_is_file = 1;
+        }
+    }
+    return "";
 }
 
 # main routine
@@ -24,6 +39,9 @@ my $nm=0;         # number of meaning for the current word
 my $meaning="";   # current meaning and synonyms
 my $p;            # misc uses
 my $encoding;     # encoding used by text file
+my $outfile;      # filename to write as output
+
+$outfile = get_outfile();
 
 # top line of thesaurus provides encoding
 $encoding=<STDIN>;
@@ -51,9 +69,20 @@ while ($rec=<STDIN>){
 # now we have all of the information
 # so sort it and then output the encoding, count and index data
 @tindex = sort by_entry @tindex;
-print STDOUT "$encoding\n";
-print STDOUT "$ne\n";
-foreach $one (@tindex) {
-    print STDOUT "$one\n";
+if ($outfile eq "") {
+    print STDOUT "$encoding\n";
+    print STDOUT "$ne\n";
+    foreach $one (@tindex) {
+        print STDOUT "$one\n";
+    }
+}else{
+    print "$outfile\n";
+    open OUTFILE, ">$outfile" or die "ERROR: Can't open $outfile for writing!";
+    print OUTFILE "$encoding\n";
+    print OUTFILE "$ne\n";
+    foreach $one (@tindex) {
+        print OUTFILE "$one\n";
+    }
+    close OUTFILE;
 }
 
