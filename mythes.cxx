@@ -146,10 +146,14 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
     // handle the case of missing file or file related errors
     if (! pdfile) return 0;
 
-    long offset = 0;
+    // check we can allocate enough memory for the string
+    std::vector<char> buffer;
+    if (len < 1 || len > buffer.max_size() - 1) {
+        return 0;
+    }
 
     /* copy search word and make sure null terminated */
-    std::vector<char> buffer(len+1);
+    buffer.resize(len+1);
     char * wrd = &buffer[0];
     memcpy(wrd,pText,len);
   
@@ -158,7 +162,7 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
     if (idx < 0) return 0;
 
     // now seek to the offset
-    offset = (long) offst[idx];
+    long offset = (long) offst[idx];
     int rc = fseek(pdfile,offset,SEEK_SET);
     if (rc) {
        return 0;
