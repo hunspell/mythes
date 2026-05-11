@@ -41,12 +41,12 @@ The Main features of MyThes are:
 MyThes comes with a simple example program that looks up some words and returns
 meanings and synonyms.
 
-To build it simply do the following:
+INSTALLATION
 
-unzip mythes.zip
-cd mythes
+./autogen.sh    # or: autoreconf -fvi
 ./configure
 make
+make install
 
 To run the example program:
 ./example th_en_US_new.idx th_en_US_new.dat checkme.lst
