@@ -1,0 +1,7 @@
+mythes_fuzzer
+corpus/*
+!corpus/seed_*.bin
+crash-*
+leak-*
+oom-*
+slow-unit-*
