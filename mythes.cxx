@@ -175,10 +175,12 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
 
     // grab the count of the number of meanings
     // and allocate a list of meaning entries
-    char * buf = NULL;
-    buf  = (char *) malloc( MAX_LN_LEN );
+    char * buf = (char *) malloc(MAX_LN_LEN);
     if (!buf) return 0;
-    readLine(pdfile, buf, (MAX_LN_LEN-1));
+    if (readLine(pdfile, buf, (MAX_LN_LEN-1)) < 0) {
+        free(buf);
+        return 0;
+    }
     int np = mystr_indexOfChar(buf,'|');
     if (np < 0) {
          free(buf);
