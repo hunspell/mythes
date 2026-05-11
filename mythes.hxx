@@ -5,6 +5,11 @@
 #define MAX_WD_LEN 200
 #define MAX_LN_LEN 16384
 
+// Sanity cap on the meaning count parsed from .dat. en_US peaks at 72
+// meanings ("cut"/"break") and the OED claims ~645 senses for "run",
+// so 8192 leaves an order of magnitude of headroom.
+#define MAX_MEANINGS 8192
+
 
 // a meaning with definition, count of synonyms and synonym list
 struct mentry {
