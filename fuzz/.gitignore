@@ -1,4 +1,8 @@
 mythes_fuzzer
+mythes_fuzzer_cov
+coverage.profraw
+coverage.profdata
+coverage-html/
 corpus/*
 !corpus/seed_*.bin
 crash-*
