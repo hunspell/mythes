@@ -51,13 +51,16 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     readLine(pifile,wrd,MAX_WD_LEN);
     encoding = mystrdup(wrd);
     readLine(pifile,wrd,MAX_WD_LEN);
-    int idxsz = atoi(wrd); 
-   
-    if (idxsz <= 0 || static_cast<unsigned int>(idxsz) > std::numeric_limits<int>::max() / sizeof(char*)) {
-       fprintf(stderr,"Error - bad index %d\n", idxsz);
+    errno = 0;
+    char *endptr = NULL;
+    long idxsz_l = strtol(wrd, &endptr, 10);
+    if (errno != 0 || endptr == wrd || idxsz_l <= 0 ||
+        idxsz_l > std::numeric_limits<int>::max() / static_cast<long>(sizeof(char*))) {
+       fprintf(stderr,"Error - bad index %ld\n", idxsz_l);
        fclose(pifile);
        return 0;
     }
+    int idxsz = static_cast<int>(idxsz_l);
 
     // now allocate list, offst for the given size
     list = (char**)   calloc(idxsz,sizeof(char*));
@@ -85,7 +88,12 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
                     return 0;
                 }
                 memcpy((list[nw]),wrd,np);
-                offst[nw] = atoi(wrd+np+1);
+                errno = 0;
+                char *off_end = NULL;
+                unsigned long off = strtoul(wrd+np+1, &off_end, 10);
+                if (errno != 0 || off > std::numeric_limits<unsigned int>::max())
+                    off = 0;
+                offst[nw] = static_cast<unsigned int>(off);
                 nw++;
             }
         }
@@ -186,9 +194,10 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
          free(buf);
          return 0;
     }          
-    int nmeanings = atoi(buf+np+1);
-    if (nmeanings < 0 || nmeanings > MAX_MEANINGS)
-        nmeanings = 0;
+    errno = 0;
+    char *nm_end = NULL;
+    long nm = strtol(buf+np+1, &nm_end, 10);
+    int nmeanings = (errno != 0 || nm < 0 || nm > MAX_MEANINGS) ? 0 : static_cast<int>(nm);
     *pme = (mentry*)(nmeanings ? malloc(nmeanings * sizeof(mentry)) : NULL);
     if (!(*pme)) {
         free(buf);
