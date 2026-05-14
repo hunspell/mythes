@@ -200,7 +200,11 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
     char dfn[MAX_WD_LEN];
 
     for (int j = 0; j < nmeanings; j++) {
-        readLine(pdfile, buf, (MAX_LN_LEN-1));
+        if (readLine(pdfile, buf, (MAX_LN_LEN-1)) < 0) {
+            // .dat ended before nmeanings lines were read; return what we got
+            nmeanings = j;
+            break;
+        }
 
         pm->count = 0;
         pm->psyns = NULL;
@@ -266,9 +270,14 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
 
     }
     free(buf);
-   
+
+    if (nmeanings == 0) {
+        free(*pme);
+        *pme = NULL;
+    }
+
     return nmeanings;
-} 
+}
 
 
 
