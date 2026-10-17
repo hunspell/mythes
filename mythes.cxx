@@ -159,9 +159,9 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
     // handle the case of missing file or file related errors
     if (! pdfile) return 0;
 
-    // check we can allocate enough memory for the string
+    // index words are shorter than MAX_WD_LEN, so a longer word has no entry
     std::vector<char> buffer;
-    if (len < 1 || len > buffer.max_size() - 1) {
+    if (len < 1 || len >= MAX_WD_LEN) {
         return 0;
     }
 
