@@ -240,8 +240,16 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
           d = d + np + 1;
           np = mystr_indexOfChar(d,'|');          
 	}
-	pm->count = nf;
         pm->psyns = (char **) malloc(nf*sizeof(char*)); 
+        if (!pos || !pm->psyns) {
+            // out of memory, so this meaning stays empty
+            free(pos);
+            free(pm->psyns);
+            pm->psyns = NULL;
+            pm++;
+            continue;
+        }
+        pm->count = nf;
         
         // fill in the synonym list
         d = p;
