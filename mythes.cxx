@@ -78,7 +78,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     { 
         int np = mystr_indexOfChar(wrd,'|');
         if (nw < idxsz) {
-            if (np >= 0) {          
+            if (np >= 0) {
                 *(wrd+np) = '\0';
                 list[nw] = (char *)calloc(1,(np+1));
                 if (!list[nw]) {
@@ -248,7 +248,7 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
         for (int jj = 0; jj < nf; jj++) 
         {
             np = mystr_indexOfChar(d,'|');
-            if (np > 0) 
+            if (np >= 0)
             {
                 *(d+np) = '\0';
                 pm->psyns[jj] = mystrdup(d);
