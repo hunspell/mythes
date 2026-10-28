@@ -151,6 +151,19 @@ void MyThes::thCleanup()
 // note: calling routine should call CleanUpAfterLookup with the original
 // meaning point and count to properly deallocate memory
 
+// free a meaning's synonyms and definition and leave it with none
+static void freeMeaning(mentry * pm)
+{
+    for (int j = 0; j < pm->count; j++) {
+        free(pm->psyns[j]);
+    }
+    free(pm->psyns);
+    pm->psyns = NULL;
+    free(pm->defn);
+    pm->defn = NULL;
+    pm->count = 0;
+}
+
 int MyThes::Lookup(const char * pText, int len, mentry** pme)
 { 
 
@@ -266,10 +279,16 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
             {
               pm->psyns[jj] = mystrdup(d);
             }            
+            if (!pm->psyns[jj]) {
+                // out of memory, so this meaning stays empty
+                pm->count = jj;
+                freeMeaning(pm);
+                break;
+            }
         }
 
         // add pos to first synonym to create the definition
-        if (pm->psyns[0])
+        if (pm->count)
 	{
             int k = strlen(pos);
             int m = strlen(pm->psyns[0]);
@@ -280,6 +299,10 @@ int MyThes::Lookup(const char * pText, int len, mentry** pme)
                  pm->defn = mystrdup(dfn);
             } else {
                 pm->defn = mystrdup(pm->psyns[0]);
+            }
+            if (!pm->defn) {
+                // out of memory, so this meaning stays empty
+                freeMeaning(pm);
             }
         }
         free(pos);
@@ -307,16 +330,7 @@ void MyThes::CleanUpAfterLookup(mentry ** pme, int nmeanings)
     mentry * pm = *pme;
        
     for (int i = 0; i < nmeanings; i++) {
-       int count = pm->count;
-       for (int j = 0; j < count; j++) {
-	  if (pm->psyns[j]) free(pm->psyns[j]);
-          pm->psyns[j] = NULL;
-       }
-       if (pm->psyns) free(pm->psyns);
-       pm->psyns = NULL;
-       if (pm->defn) free(pm->defn);
-       pm->defn = NULL;
-       pm->count = 0;
+       freeMeaning(pm);
        pm++;
     }
     pm = *pme;

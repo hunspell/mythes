@@ -12,6 +12,8 @@
 
 
 // a meaning with definition, count of synonyms and synonym list
+// a meaning whose strings could not be allocated has a count of 0, no synonyms and no definition
+// every meaning with a count above 0 has that many synonyms and a definition
 struct mentry {
   char*  defn;
   int  count;
