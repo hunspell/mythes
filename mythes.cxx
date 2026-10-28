@@ -45,6 +45,19 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
         return 0;
     } 
 
+    // an index entry is at least a '|' and a line end, so the file size bounds the count
+    long maxentries = std::numeric_limits<long>::max();
+    if (fseek(pifile, 0, SEEK_END) == 0) {
+        long size = ftell(pifile);
+        if (size >= 0) {
+            maxentries = size / 2;
+        }
+        if (fseek(pifile, 0, SEEK_SET) != 0) {
+            fclose(pifile);
+            return 0;
+        }
+    }
+
     // parse in encoding and index size
     std::vector<char> buffer(MAX_WD_LEN);
     char * wrd = &buffer[0];
@@ -54,7 +67,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     errno = 0;
     char *endptr = NULL;
     long idxsz_l = strtol(wrd, &endptr, 10);
-    if (errno != 0 || endptr == wrd || idxsz_l <= 0 ||
+    if (errno != 0 || endptr == wrd || idxsz_l <= 0 || idxsz_l > maxentries ||
         idxsz_l > std::numeric_limits<int>::max() / static_cast<long>(sizeof(char*))) {
        fprintf(stderr,"Error - bad index %ld\n", idxsz_l);
        fclose(pifile);
