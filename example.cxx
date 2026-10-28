@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     while(fgets(buf,100,wtclst)) {
       oldbuf[0] = '\0';
       k = strlen(buf);
-      if (k > 0 && buf[k - 1] == '\n') buf[k - 1] = '\0';
+      while (k > 0 && (buf[k - 1] == '\n' || buf[k - 1] == '\r')) buf[--k] = '\0';
       int len = strlen(buf);
       int count = pMT->Lookup(buf,len,&pmean);
       // don't change value of pmean
