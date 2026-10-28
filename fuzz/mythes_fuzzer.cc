@@ -72,11 +72,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         while (p < end && *p != '\n') ++p;
         if (p < end) ++p;
     }
-    // Cap probes per input: each Lookup parses one .dat record (potentially
-    // thousands of allocations), so a high count amplifies any slow path
-    // across the whole iteration and starves libFuzzer of exec/s.
-    int probed = 0;
-    while (p < end && probed < 4) {
+    // Look up every word the index names, under a budget of synonyms copied,
+    // so a record of thousands of synonyms does not starve libFuzzer of
+    // exec/s while short records are all reached.
+    int budget = 4096;
+    while (p < end && budget > 0) {
         const char *line = p;
         while (p < end && *p != '\n') ++p;
         const char *line_end = p;
@@ -87,13 +87,17 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         std::string word(line, static_cast<size_t>(bar - line));
         mentry *pme = nullptr;
         int n = mt.Lookup(word.data(), static_cast<int>(word.size()), &pme);
+        --budget;
+        for (int i = 0; i < n; ++i) budget -= pme[i].count;
         if (n > 0) mt.CleanUpAfterLookup(&pme, n);
-        ++probed;
     }
 
     // A handful of literal probes catch the binsearch / not-found paths even
-    // when the synthesized .idx has no usable lines.
-    static const char * const literals[] = { "", "a", "test" };
+    // when the synthesized .idx has no usable lines, and the two lengths at
+    // the limit Lookup accepts.
+    const std::string longest(MAX_WD_LEN - 1, 'a');
+    const std::string toolong(MAX_WD_LEN, 'a');
+    const char * const literals[] = { "", "a", "test", longest.c_str(), toolong.c_str() };
     for (const char *w : literals) {
         mentry *pme = nullptr;
         int n = mt.Lookup(w, static_cast<int>(std::strlen(w)), &pme);
