@@ -445,8 +445,9 @@ FILE * MyThes::myfopen(const char * path, const char * mode) {
         wchar_t *buff = (wchar_t *) malloc(len * sizeof(wchar_t));
         wchar_t *buff2 = (wchar_t *) malloc(len * sizeof(wchar_t));
         FILE * f = NULL;
-        MultiByteToWideChar(CP_UTF8, 0, path, -1, buff, len);
-        if (_wfullpath( buff2, buff, len ) != NULL) {
+        if (len > 0 && buff && buff2 &&
+            MultiByteToWideChar(CP_UTF8, 0, path, -1, buff, len) == len &&
+            _wfullpath( buff2, buff, len ) != NULL) {
           f = _wfopen(buff2, (strcmp(mode, "r") == 0) ? L"r" : L"rb");
         }
         free(buff);
