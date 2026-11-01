@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CXXFLAGS: -Wall -Wextra
+
+jobs:
+  linux:
+    name: Ubuntu ${{ matrix.cxx }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx: [g++, clang++]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y autoconf automake libtool pkg-config clang libhunspell-dev
+      - name: Configure
+        run: |
+          ./autogen.sh
+          ./configure CXX=${{ matrix.cxx }}
+      - name: Build
+        run: make -j$(nproc)
+      - name: Check
+        run: make -j$(nproc) check
+      - name: Distcheck
+        if: matrix.cxx == 'g++'
+        run: make -j$(nproc) distcheck
+
+  alpine:
+    name: Alpine (musl)
+    runs-on: ubuntu-latest
+    container: alpine:latest
+    steps:
+      - name: Install dependencies
+        run: apk add --no-cache build-base autoconf automake libtool pkgconf hunspell-dev bash
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: |
+          ./autogen.sh
+          ./configure
+      - name: Build
+        run: make -j$(nproc)
+      - name: Check
+        run: make -j$(nproc) check
+
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: brew install autoconf automake libtool pkgconf hunspell
+      - name: Configure
+        run: |
+          ./autogen.sh
+          ./configure
+      - name: Build
+        run: make -j$(sysctl -n hw.ncpu)
+      - name: Check
+        run: make -j$(sysctl -n hw.ncpu) check
+
+  windows:
+    name: Windows MSYS2 MINGW64
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            autoconf automake make
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-libtool
+            mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-hunspell
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: |
+          ./autogen.sh
+          ./configure
+      - name: Build
+        run: make -j$(nproc)
+      - name: Check
+        run: make -j$(nproc) check
