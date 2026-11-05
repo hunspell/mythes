@@ -63,7 +63,8 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     char * wrd = &buffer[0];
     readLine(pifile,wrd,MAX_WD_LEN);
     encoding = mystrdup(wrd);
-    readLine(pifile,wrd,MAX_WD_LEN);
+    if (readLine(pifile,wrd,MAX_WD_LEN) < 0)
+        wrd[0] = '\0';
     errno = 0;
     char *endptr = NULL;
     long idxsz_l = strtol(wrd, &endptr, 10);
