@@ -87,7 +87,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 
     // now parse the remaining lines of the index
     int len = readLine(pifile,wrd,MAX_WD_LEN);
-    while (len > 0)
+    while (len >= 0)
     { 
         int np = mystr_indexOfChar(wrd,'|');
         if (nw < idxsz) {
@@ -359,16 +359,20 @@ void MyThes::CleanUpAfterLookup(mentry ** pme, int nmeanings)
 // returns:  -1 on error or the number of characters in
 //             in the returning string
 
-// A maximum of nc characters will be returned
+// A line longer than nc - 1 characters is cut short, and the rest of it is
+// read and dropped
 
 int MyThes::readLine(FILE * pf, char * buf, int nc)
 {
-    
-  if (fgets(buf,nc,pf)) {
-    mychomp(buf);
-    return strlen(buf);
+  // fgets writes the last byte of buf only when the line fills the buffer
+  buf[nc-1] = 1;
+  if (!fgets(buf,nc,pf)) return -1;
+  if (buf[nc-1] == '\0' && buf[nc-2] != '\n') {
+    int c;
+    while ((c = fgetc(pf)) != EOF && c != '\n');
   }
-  return -1;
+  mychomp(buf);
+  return strlen(buf);
 }
 
 
