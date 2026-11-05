@@ -40,7 +40,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 {
 
     // open the index file
-    FILE * pifile = myfopen(idxpath,"r");
+    FILE * pifile = myfopen(idxpath,"rb");
     if (!pifile) {
         return 0;
     } 
@@ -117,7 +117,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
     fclose(pifile);
 
     /* next open the data file */
-    pdfile = myfopen(datpath,"r");
+    pdfile = myfopen(datpath,"rb");
     if (!pdfile) {
         return 0;
     } 
